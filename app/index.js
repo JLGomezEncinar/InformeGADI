@@ -1,6 +1,7 @@
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View, Text } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
 
 import ReportHeader from '../components/ReportHeader';
 import ReportFilters from '../components/ReportFilters';
@@ -9,8 +10,20 @@ import ReportSummary from '../components/ReportSummary';
 
 export default function Index() {
 
+    const data = [
+        { label: 'Todos', value: 'Todos' },
+        { label: '2014', value: '2014' },
+        { label: '2015', value: '2015' },
+        { label: '2016', value: '2016' },
+        { label: '2017', value: '2017' },
+        { label: '2018', value: '2018' },
+        { label: '2019', value: '2019' },
+    ];
+
+    const [value, setValue] = useState("Todos")
     const [datos, setDatos] = useState([]);
-    const [year, setYear] = useState('Todas');
+    const [nombre, setNombre] = useState('') 
+    const [isChecked, setChecked] = useState(false)
 
     useEffect(() => {
         fetch('https://raw.githubusercontent.com/JLGomezEncinar/FicheroJSON/refs/heads/main/games.json')
@@ -18,9 +31,12 @@ export default function Index() {
             .then(data => setDatos(data));
     }, []);
 
-    const datosFiltrados = year === 'Todas'
-        ? datos
-        : datos.filter(d => d.year == year);
+    const datosFiltrados = datos.filter( d => {
+        const cumpleYear = value === "Todos"
+        || d.year == value;
+        const cumpleGanador = !isChecked || isChecked == (d.winner == 1);
+        const cumpleNombre = nombre === '' || d.nominee.toLowerCase().includes(nombre.toLowerCase());
+        return (cumpleYear && cumpleGanador && cumpleNombre)});
 
 
     return (
@@ -39,10 +55,15 @@ export default function Index() {
                         <>
                             <ReportHeader />
                             <ReportFilters
-                                year={year}
-                                setYear={setYear}
+                                data={data}
+                                value={value}
+                                setValue={setValue}
+                                isChecked={isChecked}
+                                setChecked={setChecked}
+                                nombre={nombre}
+                                setNombre={setNombre}
                             />
-                            <View style={[styles.row, styles.header]}>
+                             <View style={[styles.row, styles.header]}>
                                 <Text style={styles.headerCell}>Año</Text>
                                 <Text style={styles.headerCell}>Categoría</Text>
                                 <Text style={styles.headerCell}>Nombre</Text>
@@ -50,6 +71,8 @@ export default function Index() {
                                 <Text style={styles.headerCell}>Ganador</Text>
                                 <Text style={styles.headerCell}>Votación</Text>
                             </View>
+
+
                         </>
 
 
@@ -68,6 +91,7 @@ export default function Index() {
 }
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: 'white',
         padding: 16
     },
     row: {
@@ -84,5 +108,14 @@ const styles = StyleSheet.create({
         flex: 1,
         fontWeight: 'bold',
         textAlign: 'center'
-    }
+    },
+    dropdown: {
+        height: 50,
+        borderColor: 'gray',
+        borderWidth: 0.5,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+    },
+    placeholderStyle: { fontSize: 16 },
+    selectedTextStyle: { fontSize: 16 },
 });

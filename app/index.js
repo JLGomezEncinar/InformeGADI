@@ -34,15 +34,25 @@ export default function Index() {
             .then(data => setDatos(data));
     }, []);
     
-   
-  
-    const datosFiltrados = datos.filter(d => {
+   const conteoNominees = datos.reduce((acc, item) => {
+    acc[item.nominee] = (acc[item.nominee] || 0) + 1;
+    return acc;
+}, {});
+  const datosConConteo = datos.map(d => ({
+    ...d,
+    totalNominaciones: conteoNominees[d.nominee]
+    
+}));
+console.log(datosConConteo)
+
+    const datosFiltrados = datosConConteo.filter(d => {
         const cumpleYear = value === "Todos"
             || d.year == value;
         const cumpleGanador = !isChecked || isChecked == (d.winner == 1);
         const cumpleNombre = nombre === '' || d.nominee.toLowerCase().includes(nombre.toLowerCase());
+        const cumpleNominacion = nominacion === 1 || d.totalNominaciones >= nominacion;
         
-        return (cumpleYear && cumpleGanador && cumpleNombre)
+        return (cumpleYear && cumpleGanador && cumpleNombre && cumpleNominacion)
     });
     
 

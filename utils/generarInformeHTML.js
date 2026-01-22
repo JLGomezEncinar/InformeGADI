@@ -7,8 +7,8 @@ export function generarInformeHTML(datos) {
       <td>${d.category}</td>      
       <td>${d.nominee}</td>
       <td>${d.company}</td>
-      <td>${d.winner}</td>
-      <td>${d.voted} €</td>
+      <td>${d.winner === 1 ? 'Sí' : 'No'}</td>
+      <td>${d.voted} </td>
     </tr>
   `).join('');
 
@@ -36,10 +36,12 @@ export function generarInformeHTML(datos) {
         <table>
           <tr>
             <th>#</th>
-            <th>Producto</th>
+            <th>Año</th>
             <th>Categoría</th>
-            <th>Fecha</th>
-            <th>Precio</th>
+            <th>Nominado</th>
+            <th>Compañía</th>
+            <th>Ganador</th>
+            <th>Votación</th>
           </tr>
           ${filas}
         </table>

@@ -1,7 +1,9 @@
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View, Text } from 'react-native';
+import { FlatList, StyleSheet, View, Text, Button } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
+import * as Print from 'expo-print';
+import { generarInformeHTML } from '../utils/generarInformeHTML';
 
 import ReportHeader from '../components/ReportHeader';
 import ReportFilters from '../components/ReportFilters';
@@ -22,7 +24,7 @@ export default function Index() {
 
     const [value, setValue] = useState("Todos")
     const [datos, setDatos] = useState([]);
-    const [nombre, setNombre] = useState('') 
+    const [nombre, setNombre] = useState('')
     const [isChecked, setChecked] = useState(false)
 
     useEffect(() => {
@@ -31,12 +33,18 @@ export default function Index() {
             .then(data => setDatos(data));
     }, []);
 
-    const datosFiltrados = datos.filter( d => {
+    const datosFiltrados = datos.filter(d => {
         const cumpleYear = value === "Todos"
-        || d.year == value;
+            || d.year == value;
         const cumpleGanador = !isChecked || isChecked == (d.winner == 1);
         const cumpleNombre = nombre === '' || d.nominee.toLowerCase().includes(nombre.toLowerCase());
-        return (cumpleYear && cumpleGanador && cumpleNombre)});
+        return (cumpleYear && cumpleGanador && cumpleNombre)
+    });
+
+    const exportarPDF = async () => {
+        const html = generarInformeHTML(datosFiltrados);
+        await Print.printAsync({ html });
+    };
 
 
     return (
@@ -63,7 +71,7 @@ export default function Index() {
                                 nombre={nombre}
                                 setNombre={setNombre}
                             />
-                             <View style={[styles.row, styles.header]}>
+                            <View style={[styles.row, styles.header]}>
                                 <Text style={styles.headerCell}>Año</Text>
                                 <Text style={styles.headerCell}>Categoría</Text>
                                 <Text style={styles.headerCell}>Nombre</Text>
@@ -84,6 +92,7 @@ export default function Index() {
 
                     contentContainerStyle={{ padding: 16 }}
                 />
+                <Button title="Exportar a PDF" onPress={exportarPDF} />
             </SafeAreaView>
         </SafeAreaProvider>
     );

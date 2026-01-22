@@ -2,7 +2,7 @@ import { View, TextInput, Text, StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Checkbox } from 'expo-checkbox';
 
-export default function ReportFilters({ value, setValue, data, isChecked, setChecked, nombre, setNombre }) {
+export default function ReportFilters({ value, setValue, data, isChecked, setChecked, nombre, setNombre, nominacion, setNominacion }) {
   return (
     <View style={styles.container}>
       <Dropdown
@@ -33,6 +33,21 @@ export default function ReportFilters({ value, setValue, data, isChecked, setChe
           onChangeText={setNombre}
           style={styles.input}
         />
+
+      </View>
+      <View style={{ marginBottom: 16 }}>
+
+        <Text>Nominaciones mínimas recibidas</Text>
+      <TextInput
+        placeholder="1"
+        placeholderTextColor= 'grey'
+        keyboardType="numeric"
+        value={nominacion}
+        onChangeText={setNominacion}
+        style={styles.input}
+      />
+
+        
       </View>
     </View>
   );

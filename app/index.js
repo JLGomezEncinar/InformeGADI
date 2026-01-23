@@ -13,6 +13,7 @@ import ReportSummary from '../components/ReportSummary';
 export default function Index() {
 
     const data = [
+        { label: 'Selecciona el año', value: null},
         { label: 'Todos', value: 'Todos' },
         { label: '2014', value: '2014' },
         { label: '2015', value: '2015' },
@@ -22,7 +23,7 @@ export default function Index() {
         { label: '2019', value: '2019' },
     ];
 
-    const [value, setValue] = useState("Todos")
+    const [value, setValue] = useState(null)
     const [datos, setDatos] = useState([]);
     const [nombre, setNombre] = useState('')
     const [isChecked, setChecked] = useState(false)
@@ -45,12 +46,12 @@ export default function Index() {
         totalNominaciones: conteoNominees[d.nominee]
 
     }));
-    console.log(datosConConteo)
+    
 
 
     const datosFiltrados = datosConConteo.filter(d => {
 
-        const cumpleYear = value === "Todos"
+        const cumpleYear = value === "Todos" || value === null
             || d.year == value;
         const cumpleGanador = !isChecked || isChecked == (d.winner == 1);
         const cumpleNombre = nombre === '' || d.nominee.toLowerCase().includes(nombre.toLowerCase());
@@ -69,8 +70,8 @@ export default function Index() {
         return acc;
     }, {});
 const top5Nominados = Object.entries(totalNominaciones)
-    .sort((a, b) => b[1] - a[1]) // Ordena descendente por el conteo
-    .slice(0, 5);               // Toma los primeros 5 elementos
+    .sort((a, b) => b[1] - a[1]) 
+    .slice(0, 5);               
     
     const nomimaciones = top5Nominados.map(item => item[0]);
     const totales = top5Nominados.map(item => item[1]);

@@ -16,7 +16,6 @@ export default function ReportFilters({ value, setValue, data, isChecked, setChe
         value={value}
         onChange={item => {
           setValue(item.value);
-          console.log('Seleccionado:', item.label);
         }}
       />
       <View style={styles.section}>
@@ -28,7 +27,7 @@ export default function ReportFilters({ value, setValue, data, isChecked, setChe
         <Text>Filtrar por nombre:</Text>
         <TextInput
           placeholder="Ej: Destiny"
-          placeholderTextColor= 'grey'
+          placeholderTextColor='grey'
           value={nombre}
           onChangeText={setNombre}
           style={styles.input}
@@ -38,16 +37,16 @@ export default function ReportFilters({ value, setValue, data, isChecked, setChe
       <View style={{ marginBottom: 16 }}>
 
         <Text>Nominaciones mínimas recibidas</Text>
-      <TextInput
-        placeholder="1"
-        placeholderTextColor= 'grey'
-        keyboardType="numeric"
-        value={nominacion}
-        onChangeText={setNominacion}
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="1"
+          placeholderTextColor='grey'
+          keyboardType="numeric"
+          value={nominacion}
+          onChangeText={setNominacion}
+          style={styles.input}
+        />
 
-        
+
       </View>
     </View>
   );
